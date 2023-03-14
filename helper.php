@@ -266,3 +266,57 @@ function waktu_indo($format, $time = false)
 
     return $ret;
 }
+
+/**
+ * helper function curl php
+ *
+ * @param string $url
+ * @param string $method GET, POST, PUT, PATCH, DELETE
+ * @param array $data
+ * @param array $headers
+ * @return json
+ */
+function fetch_curl($url, $method = 'GET', $data = null, $headers = array())
+{
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0');
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    switch (strtoupper($method)) {
+        case 'POST':
+            curl_setopt($curl, CURLOPT_POST, true);
+            break;
+        case 'PUT':
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+            break;
+        case 'DELETE':
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+            break;
+        default:
+            curl_setopt($curl, CURLOPT_HTTPGET, true);
+    }
+
+    if ($data) {
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+    }
+
+    if ($headers) {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    }
+
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($curl);
+
+    if ($response === false) {
+        $error = curl_error($curl);
+        curl_close($curl);
+        return $error;
+    }
+
+    curl_close($curl);
+
+    return $response;
+}
