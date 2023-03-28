@@ -4,7 +4,7 @@
  * fungsi untuk membatasi limit karakter
  *
  * @param [type] $content
- * @param integer $length panjang kata
+ * @param int $length panjang kata
  * @param string $more pemisah
  * @return string
  */
@@ -104,7 +104,7 @@ function current_timestamp()
  * fungsi untuk mengembalikan response json
  *
  * @param array $response
- * @param integer $status_code
+ * @param int $status_code
  * @param string $content_type
  * @return string json
  */
@@ -118,8 +118,8 @@ function response_json($response = [], $status_code = 200)
 /**
  * fungsi untuk format angka
  *
- * @param integer $angka
- * @return integer
+ * @param int $angka
+ * @return int
  */
 function format_angka(int $angka = 0)
 {
@@ -191,17 +191,17 @@ function romawi_to_number(string $romawi)
  * fungis untuk konversi angka menjadi romawi
  * contoh: 5 = V
  *
- * @param integer $integer
+ * @param int $angka
  * @return string
  */
-function number_to_romawi(int $integer)
+function number_to_romawi(int $angka)
 {
     $table  = ['M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1];
     $return = '';
-    while ($integer > 0) {
+    while ($angka > 0) {
         foreach ($table as $rom => $arb) {
-            if ($integer >= $arb) {
-                $integer -= $arb;
+            if ($angka >= $arb) {
+                $angka -= $arb;
                 $return  .= $rom;
                 break;
             }
@@ -319,4 +319,69 @@ function fetch_curl($url, $method = 'GET', $data = null, $headers = array())
     curl_close($curl);
 
     return $response;
+}
+
+/**
+ * helper untuk format angka showrt
+ *
+ * @param [type] $n
+ * @param int $precision
+ * @return void
+ */
+function number_format_short($n, $precision = 1)
+{
+    if ($n < 900) {
+        // 0 - 900
+        $n_format = number_format($n, $precision);
+        $suffix = '';
+    } else if ($n < 900000) {
+        // 0.9k-850k
+        $n_format = number_format($n / 1000, $precision);
+        $suffix = 'K';
+    } else if ($n < 900000000) {
+        // 0.9m-850m
+        $n_format = number_format($n / 1000000, $precision);
+        $suffix = 'M';
+    } else if ($n < 900000000000) {
+        // 0.9b-850b
+        $n_format = number_format($n / 1000000000, $precision);
+        $suffix = 'B';
+    } else {
+        // 0.9t+
+        $n_format = number_format($n / 1000000000000, $precision);
+        $suffix = 'T';
+    }
+
+    if ($precision > 0) {
+        $dotzero = '.' . str_repeat('0', $precision);
+        $n_format = str_replace($dotzero, '', $n_format);
+    }
+
+    return $n_format . $suffix;
+}
+
+/**
+ * fungsi untuk mendapatkan range date
+ * start: 01-02-2023 sampai: 04-02-2023
+ * 01-02-2023, 02-02-2023, 03-02-2023, 04-02-2023
+ *
+ * @param string|DateTime $start_date
+ * @param string|DateTime $end_date
+ * @return array
+ */
+function get_range_date($start_date, $end_date)
+{
+    $list_range_date = [];
+    $date_from = mktime(1, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
+    $date_to = mktime(1, 0, 0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4));
+
+    if ($date_to >= $date_from) {
+        array_push($list_range_date, date('Y-m-d', $date_from)); // first entry
+        while ($date_from < $date_to) {
+            $date_from += 86400; // add 24 hours
+            array_push($list_range_date, date('Y-m-d', $date_from));
+        }
+    }
+
+    return $list_range_date;
 }
