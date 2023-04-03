@@ -215,7 +215,7 @@ function number_to_romawi(int $angka)
  * fungsi date bahasa indonesia
  *
  * @param string|DateTime  $format
- * @param boolean $time
+ * @param bool $time
  * @return string
  */
 function waktu_indo($format, $time = false)
@@ -384,4 +384,26 @@ function get_range_date($start_date, $end_date)
     }
 
     return $list_range_date;
+}
+
+/**
+ * generate invoice
+ * function untuk generate invoice (string random dengan prefix)
+ *
+ * @param integer $length
+ * @param string $prefix
+ * @return void
+ */
+function generate_invoice($length = 5, $prefix = 'INV')
+{
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters_length = strlen($characters);
+    $random_string = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $random_string .= $characters[rand(0, $characters_length - 1)];
+    }
+
+    $date = date('dmY');
+    return $prefix . $date . $random_string;
 }
