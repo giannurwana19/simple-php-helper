@@ -4,7 +4,7 @@
  * fungsi untuk membatasi limit karakter
  *
  * @param [type] $content
- * @param int $length panjang kata
+ * @param integer $length panjang kata
  * @param string $more pemisah
  * @return string
  */
@@ -104,7 +104,7 @@ function current_timestamp()
  * fungsi untuk mengembalikan response json
  *
  * @param array $response
- * @param int $status_code
+ * @param integer $status_code
  * @param string $content_type
  * @return string json
  */
@@ -118,8 +118,8 @@ function response_json($response = [], $status_code = 200)
 /**
  * fungsi untuk format angka
  *
- * @param int $angka
- * @return int
+ * @param integer $angka
+ * @return integer
  */
 function format_angka(int $angka = 0)
 {
@@ -191,17 +191,17 @@ function romawi_to_number(string $romawi)
  * fungis untuk konversi angka menjadi romawi
  * contoh: 5 = V
  *
- * @param int $angka
+ * @param integer $integer
  * @return string
  */
-function number_to_romawi(int $angka)
+function number_to_romawi(int $integer)
 {
     $table  = ['M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1];
     $return = '';
-    while ($angka > 0) {
+    while ($integer > 0) {
         foreach ($table as $rom => $arb) {
-            if ($angka >= $arb) {
-                $angka -= $arb;
+            if ($integer >= $arb) {
+                $integer -= $arb;
                 $return  .= $rom;
                 break;
             }
@@ -215,7 +215,7 @@ function number_to_romawi(int $angka)
  * fungsi date bahasa indonesia
  *
  * @param string|DateTime  $format
- * @param bool $time
+ * @param boolean $time
  * @return string
  */
 function waktu_indo($format, $time = false)
@@ -325,7 +325,7 @@ function fetch_curl($url, $method = 'GET', $data = null, $headers = array())
  * helper untuk format angka showrt
  *
  * @param [type] $n
- * @param int $precision
+ * @param integer $precision
  * @return void
  */
 function number_format_short($n, $precision = 1)
@@ -372,6 +372,7 @@ function number_format_short($n, $precision = 1)
 function get_range_date($start_date, $end_date)
 {
     $list_range_date = [];
+
     $date_from = mktime(1, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
     $date_to = mktime(1, 0, 0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4));
 
@@ -382,17 +383,15 @@ function get_range_date($start_date, $end_date)
             array_push($list_range_date, date('Y-m-d', $date_from));
         }
     }
-
     return $list_range_date;
 }
 
 /**
- * generate invoice
- * function untuk generate invoice (string random dengan prefix)
+ * fungsi untu kgenerate invoice sederhana
  *
- * @param integer $length
- * @param string $prefix
- * @return void
+ * @param integer $length panjang karater acak terakhir
+ * @param string $prefix awalan invoice
+ * @return string
  */
 function generate_invoice($length = 5, $prefix = 'INV')
 {
